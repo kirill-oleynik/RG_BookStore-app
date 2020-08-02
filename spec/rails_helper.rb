@@ -3,7 +3,8 @@
 require 'faker'
 require 'pry'
 require 'spec_helper'
-require 'support/factory_bot'
+require 'factory_bot'
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |file| require file }
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
