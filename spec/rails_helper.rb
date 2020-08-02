@@ -55,5 +55,15 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |file| require file }
+  Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |file| require file }
+  if Bullet.enable?
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
+  end
 end
