@@ -32,6 +32,7 @@ group :development, :test do
   gem 'database_cleaner', '~> 1.8', '>= 1.8.5'
   gem 'factory_bot_rails', '~> 6.1'
   gem 'faker', '~> 2.13'
+  gem 'fasterer', '~> 0.8.3'
   gem 'json_matchers', '~> 0.11.1'
   gem 'pry-rails', '~> 0.3.9'
   gem 'rspec-rails', '~> 4.0', '>= 4.0.1'
