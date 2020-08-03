@@ -1,0 +1,10 @@
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'bin/**/*'
+    - 'app/mailers/**/*'
+    - 'app/jobs/**/*'
+    - 'app/channels/**/*'
+    - 'config.ru'
+    - 'app/models/application_record.rb'
