@@ -8,6 +8,8 @@ AllCops:
     - 'app/channels/**/*'
     - 'config.ru'
     - 'app/models/application_record.rb'
+Style/RedundantReturn:
+  Enabled: false
 Style/Documentation:
   Enabled: true
   Exclude:
