@@ -1,0 +1,20 @@
+{
+  "id": "file:/authors_index.json#",
+  "type": "array",
+  "definitions": {
+    "authors": {
+      "description": "A collection of authors",
+      "example": [{ "id": "1", "name": "Name" }],
+      "type": "array",
+      "items": {
+        "$ref": "file:/authors_show.json#"
+      }
+    }
+  },
+  "required": ["authors"],
+  "properties": {
+    "authors": {
+      "$ref": "#/definitions/authors"
+    }
+  }
+}

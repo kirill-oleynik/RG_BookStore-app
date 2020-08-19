@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'json_matchers/rspec'
+JsonMatchers.schema_root = 'spec/support/api/schemas'
 RSpec.configure do |config|
   config.add_formatter 'Fuubar'
   config.expect_with :rspec do |expectations|
