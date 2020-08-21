@@ -6,12 +6,13 @@ jobs:
     # Primary container image where all commands run
     
     docker:
-      - image: circleci/ruby:2.4.1-node
+      - image: circleci/ruby:2.7.1
         environment:
           BUNDLER_VERSION: 2.1.4
           RAILS_ENV: test
           PGHOST: 127.0.0.1
           PGUSER: root
+    executor: ruby/default
     
     # Service container image available at `host: localhost`
     
