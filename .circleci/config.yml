@@ -1,58 +1,44 @@
-version: 2
+version: 2.1
 jobs:
   build:
-    working_directory: ~/circleci-demo-ruby-rails
-    
-    # Primary container image where all commands run
-    
+    working_directory: ~/RG_BookStore-app
     docker:
       - image: circleci/ruby:2.7.1
         environment:
-          BUNDLER_VERSION: 2.1.4
+          PGHOST: localhost
+          PGUSER: RG_BookStore-app
           RAILS_ENV: test
-          PGHOST: 127.0.0.1
-          PGUSER: root
-    executor: ruby/default
-    
-    # Service container image available at `host: localhost`
-    
-      - image: circleci/postgres:9.6.2-alpine
+      - image: postgres:9.5
         environment:
-          POSTGRES_USER: root
-          POSTGRES_DB: circle-test_test
-        
+          POSTGRES_USER: RG_BookStore-app
+          POSTGRES_DB: RG_BookStore-app_test
+          POSTGRES_PASSWORD: ""
     steps:
       - checkout
 
-      # Restore bundle cache
-      - restore_cache:
-          keys:
-            - rails-demo-{{ checksum "Gemfile.lock" }}
-            - rails-demo-
+      # Відновлення кешованих залежностей
+      - type: cache-restore
+        name: Restore bundle cache
+        key: your-app-name-{{ checksum "Gemfile.lock" }}
 
-      # Bundle install dependencies
-      - run:
-          name: Install dependencies
-          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+      # Залежності встановлення пакету
+      - run: bundle install --path vendor/bundle
 
-      - run: sudo apt install -y postgresql-client || true
+      # Кешування залежностей
+      - type: cache-save
+        name: Store bundle cache
+        key: your-app-name-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
 
-      # Store bundle cache
-      - save_cache:
-          key: rails-demo-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
+      # Очікування бази даних
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      - run:
-          name: Database Setup
-          command: |
-            bundle exec rake db:create
-            bundle exec rake db:structure:load
+      # Встановлення середовища
+      - run: cp .sample.env .env
 
-      - run:
-          name: Parallel RSpec
-          command: bin/rails test
+      # Встановлення бази даних
+      - run: bundle exec rake db:setup
 
-      # Save artifacts
-      - store_test_results:
-          path: /tmp/test-results
+      # Запуск тестів
+      - run: bundle exec rake
