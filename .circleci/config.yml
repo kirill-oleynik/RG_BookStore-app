@@ -1,11 +1,11 @@
----
-version: 2
+version: 2.1
 jobs:
   build:
     working_directory: ~/RG_BookStore-app
     docker:
-      - image: circleci/ruby:2.4.1
+      - image: circleci/ruby:2.7.1
         environment:
+          BUNDLER_VERSION: 2.1.4
           PGHOST: localhost
           PGUSER: RG_BookStore-app
           RAILS_ENV: test
@@ -16,12 +16,7 @@ jobs:
           POSTGRES_PASSWORD: ""
     steps:
         - checkout
-
-      # Setup the environment
+        - ruby/install-deps
       - run: cp .sample.env .env
-
-      # Setup the database
       - run: bundle exec rake db:setup
-
-      # Run the tests
       - run: bundle exec rake
