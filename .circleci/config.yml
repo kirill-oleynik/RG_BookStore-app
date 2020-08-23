@@ -15,7 +15,7 @@ jobs:
           POSTGRES_DB: RG_BookStore-app_test
           POSTGRES_PASSWORD: ""
     steps:
-        - checkout
-        - ruby/install-deps
-      - run: bundle exec rake db:setup
-      - run: bundle exec rake
+      checkout
+      ruby/install-deps
+    run: bundle exec rake db:setup
+    run: bundle exec rake
