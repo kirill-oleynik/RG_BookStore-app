@@ -1,40 +1,27 @@
-version: 2.1
+---
+version: 2
 jobs:
   build:
     working_directory: ~/RG_BookStore-app
     docker:
-      - image: circleci/ruby:2.7.1
+      - image: circleci/ruby:2.4.1
         environment:
-          BUNDLER_VERSION: 2.1.4
+          PGHOST: localhost
+          PGUSER: RG_BookStore-app
           RAILS_ENV: test
-          PGHOST: 127.0.0.1
-          PGUSER: root
-      - image: circleci/postgres:9.6.2-alpine
+      - image: postgres:9.5
         environment:
-          POSTGRES_USER: root
+          POSTGRES_USER: RG_BookStore-app
           POSTGRES_DB: RG_BookStore-app_test
+          POSTGRES_PASSWORD: ""
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - RG_BookStore-app-{{ checksum "Gemfile.lock" }}
-            - RG_BookStore-app
-      - run:
-          name: Install dependencies
-          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+        - checkout
 
-      - run: sudo apt install -y postgresql-client || true
-      - save_cache:
-          key: RG_BookStore-app-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-      - run:
-          name: Database Setup
-          command: |
-            bundle exec rake db:create
-            bundle exec rake db:structure:load
-      - run:
-          name: Parallel RSpec
-          command: bin/rails test
-      - store_test_results:
-          path: /tmp/test-results
+      # Setup the environment
+      - run: cp .sample.env .env
+
+      # Setup the database
+      - run: bundle exec rake db:setup
+
+      # Run the tests
+      - run: bundle exec rake
