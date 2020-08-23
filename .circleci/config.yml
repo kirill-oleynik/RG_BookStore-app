@@ -17,6 +17,5 @@ jobs:
     steps:
         - checkout
         - ruby/install-deps
-      - run: cp .sample.env .env
       - run: bundle exec rake db:setup
       - run: bundle exec rake
