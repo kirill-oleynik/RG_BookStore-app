@@ -1,22 +1,37 @@
 version: 2.1
+orbs:
+  ruby: circleci/ruby@1.0
 jobs:
   build:
-    working_directory: ~/RG_BookStore-app
     docker:
       - image: circleci/ruby:2.7.1
         environment:
-          BUNDLER_VERSION: 2.1.4
-          PGHOST: localhost
-          PGUSER: RG_BookStore-app
           RAILS_ENV: test
+    steps:
+      - checkout
+      - ruby/install-deps 
+
+  test:
+    docker:
+      - image: circleci/ruby:2.7.1
       - image: postgres:9.5
         environment:
           POSTGRES_USER: RG_BookStore-app
           POSTGRES_DB: RG_BookStore-app_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_PASSWORD: "password"
+    environment:
+       PGHOST: localhost
+       PGUSER: RG_BookStore-app
+       RAILS_ENV: test
     steps:
-      - checkout
+      - checkout 
       - ruby/install-deps 
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Database setup
+          command: bundle exec rails db:schema:load --trace
       - ruby/rspec-test
 
 workflows:
@@ -26,4 +41,4 @@ workflows:
       - build
       - test:
           requires:
-            - build
+            - build  
