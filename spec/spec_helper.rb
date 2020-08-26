@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'json_matchers/rspec'
+JsonMatchers.schema_root = 'spec/support/api/schemas'
 RSpec.configure do |config|
   config.add_formatter 'Fuubar'
   config.expect_with :rspec do |expectations|
@@ -11,6 +13,7 @@ RSpec.configure do |config|
   end
 
   config.disable_monkey_patching!
+  config.expose_dsl_globally = true
 
   config.order = :random
   config.profile_examples = 10
